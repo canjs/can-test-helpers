@@ -6,7 +6,7 @@
 [![Travis build status](https://travis-ci.org/canjs/can-test.svg?branch=master)](https://travis-ci.org/canjs/can-test)
 [![Greenkeeper badge](https://badges.greenkeeper.io/canjs/can-test.svg)](https://greenkeeper.io/)
 
-Common utilities for CanJS projects
+Common utilities for effectively testing the features of CanJS.
 
 ## Documentation
 
