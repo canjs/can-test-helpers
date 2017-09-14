@@ -1,8 +1,8 @@
 {
-  "name": "can-test",
+  "name": "can-test-helpers",
   "version": "1.0.0",
   "description": "Test utilities for CanJS modules",
-  "main": "can-test.js",
+  "main": "can-test-helpers.js",
   "scripts": {
     "preversion": "npm test && npm run build",
     "version": "git commit -am \"Update dist for release\" && git checkout -b release && git add -f dist/",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/canjs/can-test.git"
+    "url": "git://github.com/canjs/can-test-helpers.git"
   },
   "keywords": [
     "canjs",
@@ -29,9 +29,9 @@
   "author": "Bitovi <contact@bitovi.com> (http://bitovi.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/canjs/can-test/issues"
+    "url": "https://github.com/canjs/can-test-helpers/issues"
   },
-  "homepage": "https://github.com/canjs/can-test#readme",
+  "homepage": "https://github.com/canjs/can-test-helpers#readme",
   "dependencies": {
     "can-util": "^3.10.6"
   },

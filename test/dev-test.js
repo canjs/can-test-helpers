@@ -1,9 +1,9 @@
 var QUnit = require("steal-qunit");
-var devUtils = require("can-test/lib/dev");
+var devUtils = require("can-test-helpers/lib/dev");
 var dev = require("can-util/js/dev/dev");
 var global = require("can-util/js/global/global")();
 
-QUnit.module("can-test/dev");
+QUnit.module("can-test-helpers/dev");
 
 QUnit.test("willWarn stubs out dev.warn until restore is called", function() {
 	var _warn = dev.warn;

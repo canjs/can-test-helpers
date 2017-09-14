@@ -1,4 +1,4 @@
-//# can-test
+//# can-test-helpers
 
 var dev = require('lib/dev');
 
