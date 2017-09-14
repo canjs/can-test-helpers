@@ -35,6 +35,7 @@
     "can-util": "^3.10.6"
   },
   "devDependencies": {
+    "jshint": "^2.9.5",
     "steal": "^1.5.13",
     "steal-qunit": "^1.0.1",
     "steal-tools": "^1.8.4",
