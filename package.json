@@ -1,6 +1,6 @@
 {
   "name": "can-test-helpers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Test utilities for CanJS modules",
   "main": "can-test-helpers.js",
   "scripts": {
