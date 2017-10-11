@@ -10,7 +10,90 @@ Common utilities for effectively testing the features of CanJS.
 
 ## Documentation
 
-Read the [API docs on CanJS.com](https://canjs.com/doc/can-test-helpers.html).
+### `dev.willWarn(expected, [fn])`
+
+Requests that `canDev.warn` track and notify about matching warnings.
+
+- `expected`: {String|Regexp} expected The warning message to check for
+- `fn`: {Function(String, Boolean)} [fn] an optional callback to fire on every warning; each call has the actual warning message and a Boolean indicating whether it was matched.
+
+Returns a function that tears down the warning check and returns the number of matched warnings when called.
+
+`willWarn()` takes either a String or a RegExp as its `expected` warning, and does a full, case-sensitive String
+match in the case of a String, or a regex test in the case of a RegExp, for every warning logged through
+[can-util/js/dev/dev.warn].  In addition, if `fn` is provided, it is fired on _every_ warning with the content
+of the warning message and whether it matched `expected`.
+
+`willWarn()` returns a teardown function, which must be called at least once to disable the tracking of the matched
+warning.  when called, the teardown function returns the number of times `expected` was matched by a dev warning.
+
+```js
+var dev = require('can-util/js/dev/dev');
+var devHelpers = require('can-test-helpers/lib/dev');
+
+var finishWarningCheck = devHelpers.willWarn("something evil", function(message, match) {
+	 message; // -> "something evil"
+	 match; // true
+});
+
+canDev.warn("something evil");
+
+finishWarningCheck(); // -> 1
+
+```
+
+### `dev.willError(expected, [fn])`
+
+Requests that [can-util/js/dev/dev.error canDev.error] track and notify about matching errors.
+
+- `expected` {String|Regexp} expected The error message to check for
+- `fn` {Function(String, Boolean)} [fn] an optional callback to fire on every error; each call has the actual error
+ message and a Boolean indicating whether it was matched
+
+Returns a function that tears down the error check and returns the number of matched errors when called.
+
+`willError()` takes either a String or a RegExp as its `expected` error, and does a full, case-sensitive String
+match in the case of a String, or a regex test in the case of a RegExp, for every error logged through
+[can-util/js/dev/dev.error].  In addition, if `fn` is provided, it is fired on _every_ error logged by dev.error
+with the content of the error message and whether it matched `expected`.
+
+`willError()` returns a teardown function, which must be called at least once to disable the tracking of the matched
+error.  when called, the teardown function returns the number of times `expected` was matched by a dev error.
+
+```js
+var dev = require('can-util/js/dev/dev');
+var devHelpers = require('can-test-helpers/lib/dev');
+
+var finishErrorCheck = devHelpers.willError("something evil", function(message, match) {
+	 message; // -> "something evil"
+	 match; // true
+});
+
+canDev.error("something evil");
+
+finishErrorCheck(); // -> 1
+
+```
+
+### `dev.devOnlyTest(...)`
+
+Defines a test that runs only in development mode.
+
+- {Number} [waits] an optional number of async waits
+- {String} name  the String identifier for the test in the test module
+- {Function} fn  the function body of the test.
+
+The parameter list above assumes that `test` on the global object is a QUnit test function. With `devOnlyTest`,
+the global test function will be run with the supplied parameters when the system environment is either
+unknown or not one of the production tests.  This is to help facilitate tests that rely on, e.g., canDev
+behavior that only exists in development builds.
+
+```js
+dev.devOnlyTest("it works", function() {
+   QUnit.ok(true, "it works!");
+});
+```
+
 
 ## Changelog
 
@@ -23,4 +106,3 @@ The [contribution guide](https://github.com/canjs/can-test-helpers/blob/master/C
 ## License
 
 [MIT](https://github.com/canjs/can-test-helpers/blob/master/LICENSE)
-
