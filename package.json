@@ -33,7 +33,8 @@
   },
   "homepage": "https://github.com/canjs/can-test-helpers#readme",
   "dependencies": {
-    "can-util": "^3.10.6"
+    "can-log": "^0.1.0",
+    "can-util": "^3.10.12"
   },
   "devDependencies": {
     "detect-cyclic-packages": "^1.1.0",

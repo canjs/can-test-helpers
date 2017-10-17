@@ -1,6 +1,6 @@
 var QUnit = require("steal-qunit");
 var devUtils = require("can-test-helpers/lib/dev");
-var dev = require("can-util/js/dev/dev");
+var dev = require("can-log/dev/dev");
 var global = require("can-util/js/global/global")();
 
 QUnit.module("can-test-helpers/dev");
