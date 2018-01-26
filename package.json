@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/canjs/can-test-helpers#readme",
   "dependencies": {
-    "can-log": "^0.1.0",
+    "can-log": "^1.0.0",
     "can-util": "^3.10.12"
   },
   "devDependencies": {
