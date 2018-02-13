@@ -27,13 +27,13 @@ of the warning message and whether it matched `expected`.
 `willWarn()` returns a teardown function, which must be called at least once to disable the tracking of the matched
 warning.  when called, the teardown function returns the number of times `expected` was matched by a dev warning.
 
-```javascript
+```js
 import dev from 'can-util/js/dev/dev';
 import devHelpers from 'can-test-helpers/lib/dev';
 
 const finishWarningCheck = devHelpers.willWarn("something evil", function(message, match) {
-   message; // -> "something evil"
-   match; // true
+	message; // -> "something evil"
+	match; // true
 });
 
 canDev.warn("something evil");
@@ -60,13 +60,13 @@ with the content of the error message and whether it matched `expected`.
 `willError()` returns a teardown function, which must be called at least once to disable the tracking of the matched
 error.  when called, the teardown function returns the number of times `expected` was matched by a dev error.
 
-```javascript
+```js
 import dev from 'can-util/js/dev/dev';
 import devHelpers from 'can-test-helpers/lib/dev';
 
 const finishErrorCheck = devHelpers.willError("something evil", function(message, match) {
-   message; // -> "something evil"
-   match; // true
+	message; // -> "something evil"
+	match; // true
 });
 
 canDev.error("something evil");
@@ -88,9 +88,9 @@ the global test function will be run with the supplied parameters when the syste
 unknown or not one of the production tests.  This is to help facilitate tests that rely on, e.g., canDev
 behavior that only exists in development builds.
 
-```javascript
+```js
 dev.devOnlyTest("it works", function() {
-   QUnit.ok(true, "it works!");
+	QUnit.ok(true, "it works!");
 });
 ```
 
