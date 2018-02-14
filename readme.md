@@ -28,15 +28,15 @@ of the warning message and whether it matched `expected`.
 warning.  when called, the teardown function returns the number of times `expected` was matched by a dev warning.
 
 ```js
-import dev from 'can-util/js/dev/dev';
-import devHelpers from 'can-test-helpers/lib/dev';
+import dev from "can-util/js/dev/dev";
+import devHelpers from "can-test-helpers/lib/dev";
 
-const finishWarningCheck = devHelpers.willWarn("something evil", function(message, match) {
+const finishWarningCheck = devHelpers.willWarn( "something evil", function( message, match ) {
 	message; // -> "something evil"
 	match; // true
-});
+} );
 
-canDev.warn("something evil");
+canDev.warn( "something evil" );
 
 finishWarningCheck(); // -> 1
 
@@ -61,15 +61,15 @@ with the content of the error message and whether it matched `expected`.
 error.  when called, the teardown function returns the number of times `expected` was matched by a dev error.
 
 ```js
-import dev from 'can-util/js/dev/dev';
-import devHelpers from 'can-test-helpers/lib/dev';
+import dev from "can-util/js/dev/dev";
+import devHelpers from "can-test-helpers/lib/dev";
 
-const finishErrorCheck = devHelpers.willError("something evil", function(message, match) {
+const finishErrorCheck = devHelpers.willError( "something evil", function( message, match ) {
 	message; // -> "something evil"
 	match; // true
-});
+} );
 
-canDev.error("something evil");
+canDev.error( "something evil" );
 
 finishErrorCheck(); // -> 1
 
@@ -89,9 +89,9 @@ unknown or not one of the production tests.  This is to help facilitate tests th
 behavior that only exists in development builds.
 
 ```js
-dev.devOnlyTest("it works", function() {
-	QUnit.ok(true, "it works!");
-});
+dev.devOnlyTest( "it works", function() {
+	QUnit.ok( true, "it works!" );
+} );
 ```
 
 
