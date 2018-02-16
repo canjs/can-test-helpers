@@ -1,0 +1,214 @@
+/*[global-shim-start]*/
+(function(exports, global, doEval) {
+	// jshint ignore:line
+	var origDefine = global.define;
+
+	var get = function(name) {
+		var parts = name.split("."),
+			cur = global,
+			i;
+		for (i = 0; i < parts.length; i++) {
+			if (!cur) {
+				break;
+			}
+			cur = cur[parts[i]];
+		}
+		return cur;
+	};
+	var set = function(name, val) {
+		var parts = name.split("."),
+			cur = global,
+			i,
+			part,
+			next;
+		for (i = 0; i < parts.length - 1; i++) {
+			part = parts[i];
+			next = cur[part];
+			if (!next) {
+				next = cur[part] = {};
+			}
+			cur = next;
+		}
+		part = parts[parts.length - 1];
+		cur[part] = val;
+	};
+	var useDefault = function(mod) {
+		if (!mod || !mod.__esModule) return false;
+		var esProps = { __esModule: true, default: true };
+		for (var p in mod) {
+			if (!esProps[p]) return false;
+		}
+		return true;
+	};
+
+	var hasCjsDependencies = function(deps) {
+		return (
+			deps[0] === "require" && deps[1] === "exports" && deps[2] === "module"
+		);
+	};
+
+	var modules =
+		(global.define && global.define.modules) ||
+		(global._define && global._define.modules) ||
+		{};
+	var ourDefine = (global.define = function(moduleName, deps, callback) {
+		var module;
+		if (typeof deps === "function") {
+			callback = deps;
+			deps = [];
+		}
+		var args = [],
+			i;
+		for (i = 0; i < deps.length; i++) {
+			args.push(
+				exports[deps[i]]
+					? get(exports[deps[i]])
+					: modules[deps[i]] || get(deps[i])
+			);
+		}
+		// CJS has no dependencies but 3 callback arguments
+		if (hasCjsDependencies(deps) || (!deps.length && callback.length)) {
+			module = { exports: {} };
+			args[0] = function(name) {
+				return exports[name] ? get(exports[name]) : modules[name];
+			};
+			args[1] = module.exports;
+			args[2] = module;
+		} else if (!args[0] && deps[0] === "exports") {
+			// Babel uses the exports and module object.
+			module = { exports: {} };
+			args[0] = module.exports;
+			if (deps[1] === "module") {
+				args[1] = module;
+			}
+		} else if (!args[0] && deps[0] === "module") {
+			args[0] = { id: moduleName };
+		}
+
+		global.define = origDefine;
+		var result = callback ? callback.apply(null, args) : undefined;
+		global.define = ourDefine;
+
+		// Favor CJS module.exports over the return value
+		result = module && module.exports ? module.exports : result;
+		modules[moduleName] = result;
+
+		// Set global exports
+		var globalExport = exports[moduleName];
+		if (globalExport && !get(globalExport)) {
+			if (useDefault(result)) {
+				result = result["default"];
+			}
+			set(globalExport, result);
+		}
+	});
+	global.define.orig = origDefine;
+	global.define.modules = modules;
+	global.define.amd = true;
+	ourDefine("@loader", [], function() {
+		// shim for @@global-helpers
+		var noop = function() {};
+		return {
+			get: function() {
+				return { prepareGlobal: noop, retrieveGlobal: noop };
+			},
+			global: global,
+			__exec: function(__load) {
+				doEval(__load.source, global);
+			}
+		};
+	});
+})(
+	{},
+	typeof self == "object" && self.Object == Object ? self : window,
+	function(__$source__, __$global__) {
+		// jshint ignore:line
+		eval("(function() { " + __$source__ + " \n }).call(__$global__);");
+	}
+);
+
+/*can-test-helpers@1.1.1#lib/dev*/
+define('can-test-helpers/lib/dev', [
+    'require',
+    'exports',
+    'module',
+    'can-log/dev/dev',
+    'can-util/js/make-array/make-array',
+    'can-util/js/global/global'
+], function (require, exports, module) {
+    (function (global, require, exports, module) {
+        var dev = require('can-log/dev/dev');
+        var makeArray = require('can-util/js/make-array/make-array');
+        var GLOBAL = require('can-util/js/global/global');
+        function makeExpectation(type) {
+            var original;
+            var expectedResults = [];
+            function stubbed() {
+                var message = makeArray(arguments).map(function (token) {
+                    if (typeof token !== 'string' && token.message) {
+                        return token.message;
+                    } else {
+                        return token;
+                    }
+                }).join(' ');
+                expectedResults.forEach(function (expected) {
+                    var matched = typeof expected.source === 'string' ? message === expected.source : expected.source.test(message);
+                    if (matched) {
+                        expected.count++;
+                    }
+                    if (typeof expected.fn === 'function') {
+                        expected.fn.call(null, message, matched);
+                    }
+                });
+            }
+            return function (expected, fn) {
+                var matchData = {
+                    source: expected,
+                    fn: fn,
+                    count: 0
+                };
+                expectedResults.push(matchData);
+                if (!original) {
+                    original = dev[type];
+                    dev[type] = stubbed;
+                }
+                return function () {
+                    expectedResults.splice(expectedResults.indexOf(matchData), 1);
+                    if (original && expectedResults.length < 1) {
+                        dev[type] = original;
+                        original = null;
+                    }
+                    return matchData.count;
+                };
+            };
+        }
+        module.exports = {
+            willWarn: makeExpectation('warn'),
+            willError: makeExpectation('error'),
+            devOnlyTest: function () {
+                var global = GLOBAL();
+                if (!global.System || !global.System.env || global.System.env.indexOf('production') < 0) {
+                    global.test.apply(null, arguments);
+                }
+            }
+        };
+    }(function () {
+        return this;
+    }(), require, exports, module));
+});
+/*can-test-helpers@1.1.1#can-test-helpers*/
+define('can-test-helpers', [
+    'require',
+    'exports',
+    'module',
+    'can-test-helpers/lib/dev'
+], function (require, exports, module) {
+    var dev = require('can-test-helpers/lib/dev');
+    module.exports = { dev: dev };
+});
+/*[global-shim-end]*/
+(function(global) { // jshint ignore:line
+	global._define = global.define;
+	global.define = global.define.orig;
+}
+)(typeof self == "object" && self.Object == Object ? self : window);
